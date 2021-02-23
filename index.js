@@ -15,6 +15,10 @@ yeow = obj => {
       let aliases = [`--${key}`];
       if (obj[key].aliases) aliases = aliases.concat(obj[key].aliases.split(" / "));
 
+      if (obj[key].required && !args.some(x => aliases.includes(x))) {
+        throw new Error(`missing required argument ${key}`);
+      }
+
       idxs[key] = args.findIndex(x => aliases.includes(x));
 
       if (idxs[key] != -1 && obj[key].type) {
@@ -28,10 +32,10 @@ yeow = obj => {
           a[key] = (idxs[key] != -1);
           break;
         case "string":
-          if (idxs[key] != -1) a[key] = args[idxs[key] + 1];
+          a[key] = (idxs[key] != -1) ? args[idxs[key] + 1] : obj[key].default;
           break;
         case "number":
-          if (idxs[key] != -1) a[key] = +args[idxs[key] + 1];
+          a[key] = (idxs[key] != -1) ? +args[idxs[key] + 1] : +obj[key].default;
       }
     } catch (e) {
       console.log(`${red("error:")} ${e.message}`);
