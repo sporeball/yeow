@@ -1,0 +1,29 @@
+{
+  "name": "yeow",
+  "version": "0.0.0",
+  "description": "CLI helper with attitude",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sporeball/yeow.git"
+  },
+  "keywords": [
+    "cli",
+    "helper",
+    "command",
+    "line",
+    "argument",
+    "parser",
+    "args",
+    "argv"
+  ],
+  "author": "sporeball",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sporeball/yeow/issues"
+  },
+  "homepage": "https://github.com/sporeball/yeow#readme"
+}
