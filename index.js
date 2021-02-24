@@ -8,45 +8,40 @@
 yeow = obj => {
   let v = process.argv.slice(2);
   let a = i = {};
+  let O = Object.keys(obj).reduce((a, c, i) => (a[(x => obj[x].required)(c) ? 0 : 1].push(c), a), [[], []]).flat();
 
-  for (k of Object.keys(obj)) {
+  for (k of O) {
     try {
       let K = obj[k];
-      let A;
-      if (K.aliases) A = K.aliases.split(" / ");
+      let c, D;
 
-      if (K.position !== undefined) {
-        if (!v[K.position] || (A && !A.some(x => v[K.position] == x))) {
+      if (K.required) {
+        D = O.indexOf(k);
+        if (v[D] === undefined) {
           X(`missing required argument ${k}`);
         }
-        let o = (A !== undefined) ? 1 : 0;
-        if (K.type && type(v[K.position + o]) != K.type) {
-          X(`argument ${k} has invalid type (expected ${K.type}, got ${type(v[K.position + o])})`)
-        }
-        a[k] = +v[K.position + o] || v[K.position + o];
+        c = true;
       } else {
-        A = (A || []).concat(`--${k}`);
-
-        if (K.required && !v.some(x => A.includes(x))) {
-          X(`missing required argument ${k}`);
-        }
-
+        let A = [];
+        if (K.aliases) A = K.aliases.split(" / ");
         i[k] = v.findIndex(x => A.includes(x));
+        c = (i[k] != -1);
+        D = i[k] + 1;
+      }
 
-        if (K.type && i[k] != -1 && type(v[i[k] + 1]) != K.type) {
-          X(`argument ${v[i[k]]} has invalid type (expected ${K.type}, got ${type(v[i[k] + 1])})`);
-        }
+      if (K.type && c && type(v[D]) != K.type) {
+        X(`argument ${k} has invalid type (expected ${K.type}, got ${type(v[D])})`);
+      }
 
-        switch (K.type) {
-          case undefined:
-            a[k] = (i[k] != -1);
-            break;
-          case "string":
-            a[k] = (i[k] != -1) ? v[i[k] + 1] : K.default;
-            break;
-          case "number":
-            a[k] = (i[k] != -1) ? +v[i[k] + 1] : +K.default;
-        }
+      switch (K.type) {
+        case undefined:
+          a[k] = (i[k] != -1);
+          break;
+        case "string":
+          a[k] = (i[k] != -1) ? v[D] : K.default;
+          break;
+        case "number":
+          a[k] = (i[k] != -1) ? +v[D] : +K.default;
       }
     } catch (e) {
       console.log(`\u001B[31merror:\u001B[39m ${e.message}`);
