@@ -37,11 +37,12 @@ yeow = obj => {
         case undefined:
           a[k] = (i[k] != -1);
           break;
-        case "string":
-          a[k] = (i[k] != -1) ? v[D] : K.default;
-          break;
         case "number":
           a[k] = (i[k] != -1) ? +v[D] : +K.default;
+          break;
+        default:
+          a[k] = (i[k] != -1) ? v[D] : K.default;
+          break;
       }
     } catch (e) {
       console.log(`\u001B[31merror:\u001B[39m ${e.message}`);
@@ -55,6 +56,7 @@ yeow = obj => {
 X = e => { throw Error(e); };
 type = v => {
   if (v === undefined || v.startsWith("-")) return "none";
+  if (v.match(/\w+\.\w/)) return v.slice(v.indexOf("."));
   return (isNaN(v)) ? "string" : "number";
 };
 
