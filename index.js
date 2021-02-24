@@ -56,7 +56,7 @@ yeow = obj => {
 X = e => { throw Error(e); };
 type = v => {
   if (v === undefined || v.startsWith("-")) return "none";
-  if (v.match(/\w+\.\w/)) return v.slice(v.indexOf("."));
+  if (v.match(/\w+\.\w+/)) return v.slice(v.indexOf("."));
   return (isNaN(v)) ? "string" : "number";
 };
 
