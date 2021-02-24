@@ -13,19 +13,22 @@ yeow = obj => {
   for (key of Object.keys(obj)) {
     try {
       let K = obj[key];
+      let aliases;
+      if (K.aliases) aliases = K.aliases.split(" / ");
+
       // argument is positional
       if (K.position !== undefined) {
-        if (!args[K.position]) {
+        if (!args[K.position] || (aliases && !aliases.some(x => args[K.position] == x))) {
           throw new Error(`missing required argument ${key}`);
         }
-        if (K.type && type(args[K.position]) != K.type) {
-          throw new Error(`argument ${key} has invalid type (expected ${K.type}, got ${type(args[K.position])})`)
+        let o = (aliases !== undefined) ? 1 : 0;
+        if (K.type && type(args[K.position + o]) != K.type) {
+          throw new Error(`argument ${key} has invalid type (expected ${K.type}, got ${type(args[K.position + o])})`)
         }
-        a[key] = +args[K.position] || args[K.position];
+        a[key] = +args[K.position + o] || args[K.position + o];
       // otherwise
       } else {
-        let aliases = [`--${key}`];
-        if (K.aliases) aliases = aliases.concat(K.aliases.split(" / "));
+        aliases = (aliases || []).concat(`--${key}`);
 
         if (K.required && !args.some(x => aliases.includes(x))) {
           throw new Error(`missing required argument ${key}`);
