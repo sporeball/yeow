@@ -17,8 +17,8 @@ yeow = obj => {
 
       if (K.required) {
         D = O.indexOf(k);
-        if (v[D] === undefined) {
-          X(`missing required argument ${k}`);
+        if (type(v[D]) == "none") {
+          X(K.missing || `missing required argument ${k}`);
         }
         c = true;
       } else {
@@ -30,7 +30,7 @@ yeow = obj => {
       }
 
       if (K.type && c && type(v[D]) != K.type) {
-        X(`argument ${k} has invalid type (expected ${K.type}, got ${type(v[D])})`);
+        X(K.invalid || `argument ${k} has invalid type (expected ${K.type}, got ${type(v[D])})`);
       }
 
       switch (K.type) {
