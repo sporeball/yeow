@@ -6,53 +6,50 @@
 */
 
 yeow = obj => {
-  let args = process.argv.slice(2); // arguments as passed
-  let a = {}; // arguments we return
-  let idxs = {};
+  let v = process.argv.slice(2);
+  let a = i = {};
 
-  for (key of Object.keys(obj)) {
+  for (k of Object.keys(obj)) {
     try {
-      let K = obj[key];
-      let aliases;
-      if (K.aliases) aliases = K.aliases.split(" / ");
+      let K = obj[k];
+      let A;
+      if (K.aliases) A = K.aliases.split(" / ");
 
-      // argument is positional
       if (K.position !== undefined) {
-        if (!args[K.position] || (aliases && !aliases.some(x => args[K.position] == x))) {
-          throw new Error(`missing required argument ${key}`);
+        if (!v[K.position] || (A && !A.some(x => v[K.position] == x))) {
+          X(`missing required argument ${k}`);
         }
-        let o = (aliases !== undefined) ? 1 : 0;
-        if (K.type && type(args[K.position + o]) != K.type) {
-          throw new Error(`argument ${key} has invalid type (expected ${K.type}, got ${type(args[K.position + o])})`)
+        let o = (A !== undefined) ? 1 : 0;
+        if (K.type && type(v[K.position + o]) != K.type) {
+          X(`argument ${k} has invalid type (expected ${K.type}, got ${type(v[K.position + o])})`)
         }
-        a[key] = +args[K.position + o] || args[K.position + o];
-      // otherwise
+        a[k] = +v[K.position + o] || v[K.position + o];
       } else {
-        aliases = (aliases || []).concat(`--${key}`);
+        A = (A || []).concat(`--${k}`);
 
-        if (K.required && !args.some(x => aliases.includes(x))) {
-          throw new Error(`missing required argument ${key}`);
+        if (K.required && !v.some(x => A.includes(x))) {
+          X(`missing required argument ${k}`);
         }
 
-        idxs[key] = args.findIndex(x => aliases.includes(x));
+        i[k] = v.findIndex(x => A.includes(x));
 
-        if (K.type && idxs[key] != -1 && type(args[idxs[key] + 1]) != K.type) {
-          throw new Error(`argument ${args[idxs[key]]} has invalid type (expected ${K.type}, got ${type(args[idxs[key] + 1])})`);
+        if (K.type && i[k] != -1 && type(v[i[k] + 1]) != K.type) {
+          X(`argument ${v[i[k]]} has invalid type (expected ${K.type}, got ${type(v[i[k] + 1])})`);
         }
 
         switch (K.type) {
           case undefined:
-            a[key] = (idxs[key] != -1);
+            a[k] = (i[k] != -1);
             break;
           case "string":
-            a[key] = (idxs[key] != -1) ? args[idxs[key] + 1] : K.default;
+            a[k] = (i[k] != -1) ? v[i[k] + 1] : K.default;
             break;
           case "number":
-            a[key] = (idxs[key] != -1) ? +args[idxs[key] + 1] : +K.default;
+            a[k] = (i[k] != -1) ? +v[i[k] + 1] : +K.default;
         }
       }
     } catch (e) {
-      console.log(`${red("error:")} ${e.message}`);
+      console.log(`\u001B[31merror:\u001B[39m ${e.message}`);
       process.exit(1);
     }
   }
@@ -60,11 +57,10 @@ yeow = obj => {
   return a;
 }
 
-red = str => `\u001B[31m${str}\u001B[39m`;
-
+X = e => { throw Error(e); };
 type = v => {
   if (v === undefined || v.startsWith("-")) return "none";
   return (isNaN(v)) ? "string" : "number";
-}
+};
 
 module.exports = yeow;
