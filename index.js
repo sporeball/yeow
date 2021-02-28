@@ -7,7 +7,7 @@
 
 yeow = obj => {
   let v = process.argv.slice(2);
-  let a = i = {};
+  let a = {};
   let O = Object.keys(obj).reduce((a, c, i) => (a[(x => obj[x].required)(c) ? 0 : 1].push(c), a), [[], []]).flat();
 
   for (k of O) {
@@ -24,9 +24,8 @@ yeow = obj => {
       } else {
         let A = [];
         if (K.aliases) A = K.aliases.split(" / ");
-        i[k] = v.findIndex(x => A.includes(x));
-        c = (i[k] != -1);
-        D = i[k] + 1;
+        D = v.findIndex(x => A.includes(x)) + 1;
+        c = D > 0;
       }
 
       if (K.extensions) E = K.extensions.split(" / ");
@@ -39,16 +38,9 @@ yeow = obj => {
         X(K.invalid || `argument ${k} has invalid extension (expected ${E.length > 1 ? "one of " : ""}${K.extensions})`);
       }
 
-      switch (K.type) {
-        case undefined:
-          a[k] = (i[k] != -1);
-          break;
-        case "number":
-          a[k] = (i[k] != -1) ? +v[D] : +K.default;
-          break;
-        default:
-          a[k] = (i[k] != -1) ? v[D] : K.default;
-      }
+      a[k] = K.type === undefined ? D > 0 :
+        K.type == "number" ? c ? +v[D] : +K.default :
+        c ? v[D] : K.default;
     } catch (e) {
       console.log(`\u001B[31merror:\u001B[39m ${e.message}`);
       process.exit(1);
@@ -59,8 +51,6 @@ yeow = obj => {
 }
 
 X = e => { throw Error(e); };
-t = v => v === undefined || v.startsWith("-") ? "none" :
-  v.match(/\w+\.\w+/) ? "file" :
-  v.match(/^0$|^[1-9]+[0-9]*$/) ? "number" : "string";
+t = v => v === undefined || v.startsWith("-") ? "none" : v.match(/\w+\.\w+/) ? "file" : v.match(/^0$|^[1-9]+[0-9]*$/) ? "number" : "string";
 
 module.exports = yeow;
