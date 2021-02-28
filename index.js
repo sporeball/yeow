@@ -16,16 +16,12 @@ yeow = obj => {
       let c, D, E;
 
       if (K.required) {
-        D = O.indexOf(k);
-        if (t(v[D]) == "none") {
+        if (t(v[(D = O.indexOf(k))]) == "none") {
           X(K.missing || `missing required argument ${k}`);
         }
         c = true;
       } else {
-        let A = [];
-        if (K.aliases) A = K.aliases.split(" / ");
-        D = v.findIndex(x => A.includes(x)) + 1;
-        c = D > 0;
+        c = (D = K.aliases ? v.findIndex(x => K.aliases.split(" / ").includes(x)) + 1 : -1) > 0;
       }
 
       if (K.extensions) E = K.extensions.split(" / ");
