@@ -13,7 +13,7 @@ yeow = obj => {
   for (k of O) {
     try {
       let K = obj[k];
-      let c, D;
+      let c, D, E;
 
       if (K.required) {
         D = O.indexOf(k);
@@ -29,8 +29,14 @@ yeow = obj => {
         D = i[k] + 1;
       }
 
-      if (K.type && c && (t(v[D]) == "none" || (K.type == "number" && t(v[D]) != K.type))) {
+      if (K.extensions) E = K.extensions.split(" / ");
+
+      if (K.type && c && (t(v[D]) == "none" || (K.type != "string" && t(v[D]) != K.type))) {
         X(K.invalid || `argument ${k} has invalid type (expected ${K.type}, got ${t(v[D])})`);
+      }
+
+      if (K.type == "file" && E && !E.some(x => v[D].endsWith(x))) {
+        X(K.invalid || `argument ${k} has invalid extension (expected ${E.length > 1 ? "one of " : ""}${K.extensions})`);
       }
 
       switch (K.type) {
@@ -53,10 +59,8 @@ yeow = obj => {
 }
 
 X = e => { throw Error(e); };
-t = v => {
-  if (v === undefined || v.startsWith("-")) return "none";
-  if (v.match(/\w+\.\w+/)) return v.slice(v.indexOf("."));
-  return (v.match(/^0$|^[1-9]+[0-9]*$/)) ? "number" : "string";
-};
+t = v => v === undefined || v.startsWith("-") ? "none" :
+  v.match(/\w+\.\w+/) ? "file" :
+  v.match(/^0$|^[1-9]+[0-9]*$/) ? "number" : "string";
 
 module.exports = yeow;
