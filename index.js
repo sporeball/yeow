@@ -17,7 +17,7 @@ yeow = obj => {
 
       if (K.required) {
         D = O.indexOf(k);
-        if (type(v[D]) == "none") {
+        if (t(v[D]) == "none") {
           X(K.missing || `missing required argument ${k}`);
         }
         c = true;
@@ -29,8 +29,8 @@ yeow = obj => {
         D = i[k] + 1;
       }
 
-      if (K.type && c && type(v[D]) != K.type) {
-        X(K.invalid || `argument ${k} has invalid type (expected ${K.type}, got ${type(v[D])})`);
+      if (K.type && c && (t(v[D]) == "none" || (K.type == "number" && t(v[D]) != K.type))) {
+        X(K.invalid || `argument ${k} has invalid type (expected ${K.type}, got ${t(v[D])})`);
       }
 
       switch (K.type) {
@@ -42,7 +42,6 @@ yeow = obj => {
           break;
         default:
           a[k] = (i[k] != -1) ? v[D] : K.default;
-          break;
       }
     } catch (e) {
       console.log(`\u001B[31merror:\u001B[39m ${e.message}`);
@@ -54,10 +53,10 @@ yeow = obj => {
 }
 
 X = e => { throw Error(e); };
-type = v => {
+t = v => {
   if (v === undefined || v.startsWith("-")) return "none";
   if (v.match(/\w+\.\w+/)) return v.slice(v.indexOf("."));
-  return (isNaN(v)) ? "string" : "number";
+  return (v.match(/^0$|^[1-9]+[0-9]*$/)) ? "number" : "string";
 };
 
 module.exports = yeow;
