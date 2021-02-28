@@ -1,4 +1,7 @@
 # yeow
+
+<a href="https://www.npmjs.com/package/yeow"><img src="https://img.shields.io/npm/v/yeow" /></a>
+
 **yeow** is a CLI helper with attitude &mdash; part [meow](https://github.com/sindresorhus/meow), part [yargs](https://github.com/yargs/yargs), and built to spite the both of them.
 
 things yeow **does**:
@@ -104,7 +107,7 @@ if this is omitted, the argument will accept files of any extension.
 ##### default
 type: `string | number`
 
-a default value the argument will have if it is omitted.
+a default value the argument will have if it is omitted. the value's type should match the argument's `type`.
 
 if the argument is `required`, this will be ignored.
 
