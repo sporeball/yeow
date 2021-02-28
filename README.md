@@ -18,6 +18,7 @@ $ npm i --save yeow
 
 ### usage
 ```js
+#!/usr/bin/env node
 const args = require("yeow")({
   "exclamation": {
     type: "string",
@@ -58,7 +59,7 @@ type of the argument.
 possible values:
 - `string`
 - `number`
-- any string matching `/$\.\w+/` (i.e. a file extension)
+- `file`
 
 if this is omitted, the argument will become a simple `true`/`false` flag.
 
@@ -88,10 +89,22 @@ example values:
 
 if the argument is `required`, this will be ignored.
 
+##### extensions
+type: `string`
+
+valid file extensions for the argument, space-slash-space separated.
+
+example values:
+- `.txt`
+- `.js / .jsx`
+
+if the argument's `type` is not `file`, this will be ignored.\
+if this is omitted, the argument will accept files of any extension.
+
 ##### default
 type: `string | number`
 
-a default value the argument will have if it is omitted. the value's type should match the argument's `type`.
+a default value the argument will have if it is omitted.
 
 if the argument is `required`, this will be ignored.
 
@@ -104,7 +117,8 @@ error message to output if the argument is passed with an invalid type.
 ```js
 const args = require("yeow")({
   "script": {
-    type: ".js",
+    type: "file",
+    extensions: ".js",
     required: true,
     missing: "a file must be passed",
     invalid: "not a .js file"
