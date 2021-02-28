@@ -30,7 +30,7 @@ yeow = obj => {
         X(K.invalid || `argument ${k} has invalid type (expected ${K.type}, got ${t(v[D])})`);
       }
 
-      if (K.type == "file" && E && !E.some(x => v[D].endsWith(x))) {
+      if (K.type == "file" && c && E && !E.some(x => v[D].endsWith(x))) {
         X(K.invalid || `argument ${k} has invalid extension (expected ${E.length > 1 ? "one of " : ""}${K.extensions})`);
       }
 
