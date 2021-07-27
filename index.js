@@ -5,12 +5,12 @@
   MIT license
 */
 
-yeow = obj => {
+const yeow = obj => {
   let v = process.argv.slice(2);
   let a = {};
   let O = Object.keys(obj).reduce((a, c, i) => (a[(x => obj[x].required)(c) ? 0 : 1].push(c), a), [[], []]).flat();
 
-  for (k of O) {
+  for (let k of O) {
     let K = obj[k];
     let c, D, E;
 
@@ -41,10 +41,11 @@ yeow = obj => {
   return a;
 }
 
-X = e => {
+const X = e => {
   console.log(`\u001B[31merror:\u001B[39m ${e}`);
   process.exit(1);
 };
-t = v => v === undefined || v.startsWith("-") ? "none" : v.match(/\w+\.\w+/) ? "file" : v.match(/^0$|^[1-9]+[0-9]*$/) ? "number" : "string";
+
+const t = v => v === undefined || v.startsWith("-") ? "none" : v.match(/\w+\.\w+/) ? "file" : v.match(/^0$|^[1-9]+[0-9]*$/) ? "number" : "string";
 
 module.exports = yeow;
